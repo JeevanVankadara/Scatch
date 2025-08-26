@@ -22,6 +22,10 @@ if(process.env.NODE_ENV==="development"){
 
 router.get("/",(req,res)=>{
     res.send("Hey");
+});
+
+router.get("/admin", function(req,res){
+    res.render("createproducts");
 })
 
 module.exports=router;
