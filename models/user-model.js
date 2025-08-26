@@ -8,7 +8,6 @@ const Userschema=mongoose.Schema({
         type: Array,
         default:[]
     },
-    iadmin: Boolean,
     orders : {
         type: Array,
         default:[]
