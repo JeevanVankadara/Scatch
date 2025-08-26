@@ -1,7 +1,5 @@
 const mongoose=require('mongoose');
 
-mongoose.connect("");
-
 const Userschema=mongoose.Schema({
     fullname: String,
     email : String,
