@@ -1,7 +1,8 @@
 <%- include('./partials/header') %>
-    <div class="w-full h-screen flex items-start px-20 py-20">
-        <div class="w-[25%] flex h-screen flex-col items-start">
-            <div class="flex items-center gap-2">
+    <div class="w-full min-h-screen flex px-20 py-10 mt-10">
+        <!-- Sidebar -->
+        <div class="w-[25%] flex flex-col items-start pr-10">
+            <div class="flex items-center gap-2 mb-10">
                 <h3>sort by</h3>
                 <form action="/shop">
                     <select class="border-[1px] px-2 py-1" name="sortby" id="">
@@ -10,41 +11,44 @@
                     </select>
                 </form>
             </div>
-            <div class="flex flex-col mt-20">
+            <div class="flex flex-col mb-10">
                 <a class="block w-fit mb-2" href="">New Collection</a>
                 <a class="block w-fit mb-2" href="">All Products</a>
                 <a class="block w-fit mb-2" href="">Discounted Products</a>
             </div>
-            <div class="mt-32">
+            <div>
                 <a class="block w-fit mb-2" href="">Filter by :</a>
                 <a class="block w-fit mb-2" href="">Availability</a>
                 <a class="block w-fit mb-2" href="">Discount</a>
             </div>
         </div>
-        <div class="w-[75%] flex flex-col gap-5 h-screen">
-            <div class="flex items-start gap-5">
-                <% products.forEach(function(product){ %>
-                    <div class="w-60">
-                        <div class="w-full h-52 flex items-center justify-center bg-[<%= product.bgcolor %>]">
-                            <img class="h-[12rem]" src="data:image/jpeg;base64,<%= product.image.toString('base64') %>"
-                                alt="">
+        
+        <!-- Products Grid -->
+        <div class="w-[75%]">
+            <div class="grid grid-cols-4 gap-8"> <!-- Increased gap for better spacing -->
+                <% products.forEach(function(product) { %>
+                    <div class="flex flex-col h-72"> <!-- Fixed height for consistent sizing -->
+                        <!-- Product image container -->
+                        <div class="w-full h-44 flex items-center justify-center p-2" style="background-color: <%= product.bgcolor %>">
+                            <% if (product.image && product.mimetype) { %>
+                                <img class="max-h-36 w-auto object-contain" src="data:<%= product.mimetype %>;base64,<%= product.image.toString('base64') %>" alt="<%= product.name %>">
+                            <% } else { %>
+                                <p>No image available</p>
+                            <% } %>
                         </div>
-                        <div
-                            class="flex justify-between bg-[<%= product.panelcolor %>] items-center px-4 py-4 text-[<%= product.textcolor %>]">
+                        <!-- Product info panel -->
+                        <div class="flex justify-between items-center px-4 py-3 mt-2" style="background-color: <%= product.panelcolor %>; color: <%= product.textcolor %>">
                             <div>
-                                <h3>
-                                    <%= product.name %>
-                                </h3>
-                                <h4>₹ <%= product.price %>
-                                </h4>
+                                <h3 class="text-sm font-medium"><%= product.name %></h3>
+                                <h4 class="text-sm">₹ <%= product.price %></h4>
                             </div>
-                            <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white" href="">
+                            <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white text-black" href="">
                                 <i class="ri-add-line"></i>
                             </a>
                         </div>
                     </div>
-                    <% }) %>
+                <% }) %>
             </div>
         </div>
     </div>
-    <%- include('./partials/footer') %>
+<%- include('./partials/footer') %>
