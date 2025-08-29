@@ -1,4 +1,11 @@
 <%- include('./partials/header') %>
+
+<% if (success && success.length > 0) { %>
+  <div id="flash-message" class="fixed top-5 left-1/2 -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded shadow-lg text-sm z-50">
+    <%= success[0] %>
+  </div>
+<% } %>
+
     <div class="w-full min-h-screen flex px-20 py-10 mt-10">
         <!-- Sidebar -->
         <div class="w-[25%] flex flex-col items-start pr-10">
@@ -23,12 +30,11 @@
             </div>
         </div>
         
-        <!-- Products Grid -->
         <div class="w-[75%]">
-            <div class="grid grid-cols-4 gap-8"> <!-- Increased gap for better spacing -->
+            <div class="grid grid-cols-4 gap-8">
                 <% products.forEach(function(product) { %>
-                    <div class="flex flex-col h-72"> <!-- Fixed height for consistent sizing -->
-                        <!-- Product image container -->
+                    <div class="flex flex-col h-72"> 
+
                         <div class="w-full h-44 flex items-center justify-center p-2" style="background-color: <%= product.bgcolor %>">
                             <% if (product.image && product.mimetype) { %>
                                 <img class="max-h-36 w-auto object-contain" src="data:<%= product.mimetype %>;base64,<%= product.image.toString('base64') %>" alt="<%= product.name %>">
@@ -36,13 +42,13 @@
                                 <p>No image available</p>
                             <% } %>
                         </div>
-                        <!-- Product info panel -->
+
                         <div class="flex justify-between items-center px-4 py-3 mt-2" style="background-color: <%= product.panelcolor %>; color: <%= product.textcolor %>">
                             <div>
                                 <h3 class="text-sm font-medium"><%= product.name %></h3>
                                 <h4 class="text-sm">₹ <%= product.price %></h4>
                             </div>
-                            <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white text-black" href="">
+                            <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white text-black" href="/addtocart/<%= product._id %>">
                                 <i class="ri-add-line"></i>
                             </a>
                         </div>
