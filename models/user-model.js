@@ -13,7 +13,9 @@ const Userschema=mongoose.Schema({
         default:[]
     },
     contact : Number,
-    picture : String
+    picture : String,
+    address : String,
+    pincode : Number,
 });
 
 module.exports=mongoose.model("user",Userschema);

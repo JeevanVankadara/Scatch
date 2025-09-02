@@ -6,55 +6,72 @@
   </div>
 <% } %>
 
+<% if (error && error.length > 0) { %>
+  <div id="flash-message" class="fixed top-5 left-1/2 -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded shadow-lg text-sm z-50">
+    <%= error[0] %>
+  </div>
+<% } %>
+
     <div class="w-full min-h-screen flex px-20 py-10 mt-10">
         <!-- Sidebar -->
         <div class="w-[25%] flex flex-col items-start pr-10">
-            <div class="flex items-center gap-2 mb-10">
-                <h3>sort by</h3>
-                <form action="/shop">
-                    <select class="border-[1px] px-2 py-1" name="sortby" id="">
-                        <option value="popular">Popular</option>
-                        <option value="newest">Newest</option>
-                    </select>
-                </form>
-            </div>
             <div class="flex flex-col mb-10">
-                <a class="block w-fit mb-2" href="">New Collection</a>
-                <a class="block w-fit mb-2" href="">All Products</a>
-                <a class="block w-fit mb-2" href="">Discounted Products</a>
+                <a class="block w-fit mb-2" href="/filter/new">New Collection</a>
+                <a class="block w-fit mb-2" href="/shop">All Products</a>
+                <a class="block w-fit mb-2" href="/filter/Discount">Discounted Products</a>
             </div>
             <div>
-                <a class="block w-fit mb-2" href="">Filter by :</a>
+                <p class="block w-fit mb-2">Filter by : <%= filter %></p>
                 <a class="block w-fit mb-2" href="">Availability</a>
-                <a class="block w-fit mb-2" href="">Discount</a>
             </div>
         </div>
         
         <div class="w-[75%]">
             <div class="grid grid-cols-4 gap-8">
                 <% products.forEach(function(product) { %>
-                    <div class="flex flex-col h-72"> 
+                <div class="flex flex-col h-72"> 
 
-                        <div class="w-full h-44 flex items-center justify-center p-2" style="background-color: <%= product.bgcolor %>">
-                            <% if (product.image && product.mimetype) { %>
-                                <img class="max-h-36 w-auto object-contain" src="data:<%= product.mimetype %>;base64,<%= product.image.toString('base64') %>" alt="<%= product.name %>">
-                            <% } else { %>
-                                <p>No image available</p>
-                            <% } %>
-                        </div>
+                <div class="w-full h-44 flex items-center justify-center p-2" style="background-color: <%= product.bgcolor %>">
+                    <% if (product.image && product.mimetype) { %>
+                    <img class="max-h-36 w-auto object-contain" 
+                        src="data:<%= product.mimetype %>;base64,<%= product.image.toString('base64') %>" 
+                        alt="<%= product.name %>">
+                    <% } else { %>
+                    <p>No image available</p>
+                    <% } %>
+                </div>
 
-                        <div class="flex justify-between items-center px-4 py-3 mt-2" style="background-color: <%= product.panelcolor %>; color: <%= product.textcolor %>">
-                            <div>
-                                <h3 class="text-sm font-medium"><%= product.name %></h3>
-                                <h4 class="text-sm">₹ <%= product.price %></h4>
-                            </div>
-                            <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white text-black" href="/addtocart/<%= product._id %>">
-                                <i class="ri-add-line"></i>
-                            </a>
-                        </div>
+                <div class="flex justify-between items-center px-4 py-3 mt-2" 
+                    style="background-color: <%= product.panelcolor %>; color: <%= product.textcolor %>">
+                    
+                    <div>
+                    <h3 class="text-sm font-medium"><%= product.name %></h3>
+                    <div class="flex items-center gap-2">
+                        <h4 class="text-sm font-semibold">₹ <%= product.price %></h4>
+                        <% if (product.discount && product.discount > 0) { %>
+                        <span class="px-2 py-0.5 rounded-full text-xs font-medium 
+                                    <%= product.bgcolor %> <%= product.textcolor %>">
+                            <%= product.discount %>% OFF
+                        </span>
+                        <% } %>
                     </div>
+                    </div>
+
+                    <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white text-black" 
+                    href="/addtocart/<%= product._id %>">
+                    <i class="ri-add-line"></i>
+                    </a>
+                </div>
+                </div>
+
                 <% }) %>
             </div>
         </div>
     </div>
+
+    <script>
+        setTimeout(()=>{
+            document.getElementById('flash-message').classList.add('hidden');
+        },2000);
+    </script>
 <%- include('./partials/footer') %>

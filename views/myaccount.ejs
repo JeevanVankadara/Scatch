@@ -21,7 +21,7 @@
                 <h3 class="text-lg font-semibold mb-3">My Account</h3>
                 <a class="block w-fit mb-2 hover:underline" href="/shop">Shop</a>
                 <a class="block w-fit mb-2 hover:underline" href="/orders">My Orders</a>
-                <a class="block w-fit mb-2 hover:underline" href="/myaccount">My account</a>
+                <a class="block w-fit mb-2 hover:underline" href="/account">My account</a>
             </div>
         </div>
 
@@ -38,11 +38,12 @@
 
                 <form action="/changedetails" method="post" class="flex flex-col gap-4" onsubmit="" id="yourformId">
                     <input type="text" value="<%= user.fullname %>" name="fullname" class="border px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-gray-300">
-                    <input type="password" placeholder="Enter old password" name="oldpass" class="border px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-gray-300">
+                    <input type="password" placeholder="Enter old password" name="oldpass" id="oldpass" class="border px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-gray-300">
                     <input type="password" placeholder="Enter new password" name="newpass" id="pass1" class="border px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-gray-300">
                     <input type="password" placeholder="Re-Enter the new password" name="confnewpass" id="pass2" class="border px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-gray-300">
                     <input type="text" value="<%= user.contact %>" name="contact" class="border px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-gray-300">
-                    
+                    <input type="text" value="<%= user.address %>" name="address" class="border px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-gray-300">
+                    <input type="number" value="<%= user.pincode %>" name="pincode" class="border px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-gray-300">    
                     <input type="submit" value="Update" class="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 cursor-pointer transition">
                 </form>
             </div>
@@ -53,6 +54,12 @@
         document.getElementById('yourformId').addEventListener('submit',function(event){
             const pass1=document.getElementById('pass1').value;
             const pass2=document.getElementById('pass2').value;
+            const oldpass=document.getElementById('oldpass').value;
+
+            if(oldpass===''){
+                alert("Enter your old password");
+                event.preventDefault();
+            }
 
             if(pass1!=pass2){
                 alert("Passwords doesnot match");
