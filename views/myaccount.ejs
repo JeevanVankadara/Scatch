@@ -22,6 +22,7 @@
                 <a class="block w-fit mb-2 hover:underline" href="/shop">Shop</a>
                 <a class="block w-fit mb-2 hover:underline" href="/orders">My Orders</a>
                 <a class="block w-fit mb-2 hover:underline" href="/account">My account</a>
+                <a class="block w-fit mb-2 hover:underline text-red-600" href="/users/DeleteAccount">Delete account</a>                
             </div>
         </div>
 
@@ -41,9 +42,9 @@
                     <input type="password" placeholder="Enter old password" name="oldpass" id="oldpass" class="border px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-gray-300">
                     <input type="password" placeholder="Enter new password" name="newpass" id="pass1" class="border px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-gray-300">
                     <input type="password" placeholder="Re-Enter the new password" name="confnewpass" id="pass2" class="border px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-gray-300">
-                    <input type="text" value="<%= user.contact %>" name="contact" class="border px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-gray-300">
-                    <input type="text" value="<%= user.address %>" name="address" class="border px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-gray-300">
-                    <input type="number" value="<%= user.pincode %>" name="pincode" class="border px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-gray-300">    
+                    <input type="text" value="<%= user.contact %>" name="contact" id="contact" class="border px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-gray-300">
+                    <input type="text" value="<%= user.address %>" name="address" id="address" class="border px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-gray-300">
+                    <input type="number" value="<%= user.pincode %>" name="pincode" id="pincode" class="border px-3 py-2 rounded-md focus:outline-none focus:ring focus:ring-gray-300">    
                     <input type="submit" value="Update" class="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 cursor-pointer transition">
                 </form>
             </div>
@@ -56,6 +57,7 @@
             const pass2=document.getElementById('pass2').value;
             const oldpass=document.getElementById('oldpass').value;
 
+
             if(oldpass===''){
                 alert("Enter your old password");
                 event.preventDefault();
@@ -66,6 +68,19 @@
                 event.preventDefault();
             }
         });
+        const contact =document.getElementById('contact');
+        if(!contact.value){
+            contact.setAttribute('placeholder',"Enter your contact number");
+        }
+        const address =document.getElementById('address');
+        if(!address.value){
+            address.setAttribute('placeholder',"Enter your Address");
+        }
+        const pincode =document.getElementById('pincode');
+        if(!pincode.value){
+            pincode.setAttribute('placeholder',"Enter your Pincode");
+        }
+        
     </script>
 </body>
 
