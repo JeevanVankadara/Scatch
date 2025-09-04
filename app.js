@@ -13,7 +13,7 @@ const ownerRouter=require('./routes/ownerRouter');
 const productRouter=require('./routes/productRouter');
 const userRouter=require('./routes/userRouter');
 const indexRouter=require('./routes/index');
-
+const orderRouter=require('./routes/orders');
 
 
 const cookieParser=require('cookie-parser');
@@ -40,5 +40,7 @@ app.use("",indexRouter);
 app.use("/owners",ownerRouter);
 app.use("/users",userRouter);
 app.use("/products",productRouter);
+
+app.use("/orders",orderRouter);
 
 app.listen(3000);

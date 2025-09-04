@@ -11,7 +11,7 @@ const Userschema=mongoose.Schema({
     }],
     orders : [{
         type: mongoose.Schema.Types.ObjectId,
-        ref:"product",
+        ref:"order",
     }],
     contact : Number,
     picture : String,

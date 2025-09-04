@@ -5,6 +5,7 @@ const isLoggedin=require('../middlewares/isLoggedin');
 const userModel=require('../models/user-model');
 const bcrypt=require('bcrypt');
 const filters=require('./filters');
+const orderModel=require('../models/orders-model');
 
 router.get("/",function(req,res){
     let error=req.flash("error");
@@ -87,8 +88,39 @@ router.post("/changedetails",isLoggedin,async (req,res)=>{
     });
 });
 
+router.get("/removeproduct/:product_id",isLoggedin,async (req,res)=>{
+    let user=await userModel.findOne({email:req.user.email});
+    if(!user) return res.redirect("/");
+    const i=user.cart.indexOf(req.params.product_id);
+    if(i !==-1){
+        user.cart.splice(i,1);
+    }
+    await user.save();
+    res.redirect("/cart");
+});
+
+router.get("/myorders", isLoggedin, async (req, res) => {
+    let user = await userModel.findOne({ email: req.user.email });
+    let orders = await orderModel.find({ user: user._id }).populate("products");
+    res.render("myorders", { user, orders });
+});
 
 
+router.post("/checkout",isLoggedin,async (req,res)=>{
+    let user=await userModel.findOne({email:req.user.email});
+    if(!user) return res.redirect("/");
+    let{products,totalCost}=req.body;
 
+    let order=await orderModel.create({
+        products:products.map(p=>p.id),
+        user:user._id,
+        totalCost:totalCost,
+    })
+
+    user.orders.push(order._id);
+
+    await user.save();
+    res.redirect("/myorders");
+});
 
 module.exports=router;

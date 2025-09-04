@@ -6,7 +6,10 @@
     <div id="summary-bar" class="sticky top-0 bg-white shadow-md p-3 rounded-md hidden">
         <div class="flex justify-between items-center">
             <h2 class="text-lg">Total Selected: ₹ <span id="grand-total">0</span></h2>
-            <button class="px-4 py-1.5 bg-yellow-500 font-medium rounded-md hover:bg-yellow-600 text-sm">Proceed to Buy</button>
+            <button id="buy-btn" 
+                class="px-4 py-1.5 bg-yellow-500 font-medium rounded-md hover:bg-yellow-600 text-sm">
+                Proceed to Buy
+            </button>
         </div>
     </div>
 
@@ -17,8 +20,10 @@
 
             <!-- Left Product Card -->
             <div class="w-[25%] rounded-md overflow-hidden relative">
-                <!-- Checkbox -->
-                <input type="checkbox" class="absolute top-2 left-2 w-4 h-4 product-check"
+                <input type="checkbox" 
+                       name="selectedProducts[]" 
+                       value="<%= item._id %>" 
+                       class="absolute top-2 left-2 w-4 h-4 product-check"
                        data-price="<%= unitPrice %>"
                        data-index="<%= index %>"
                        id="product-<%= index %>">
@@ -27,20 +32,20 @@
                     <img class="h-36 object-contain"
                         src="data:<%= item.mimetype %>;base64,<%= item.image.toString('base64') %>"
                         alt="<%= item.name %>">
+                    <a href="/removeproduct/<%= item._id %>" class="absolute top-2 right-2">
+                        <img class="h-6 w-6 object-contain" src="/images/bin.png" alt="bin image">
+                    </a>
                 </div>
 
                 <div class="w-full flex justify-between px-3 py-2 bg-[<%= item.panelcolor %>]">
                     <h3 class="text-lg font-medium"><%= item.name %></h3>
                     <div class="flex items-center gap-1">
-                        <!-- Add -->
                         <i class="w-5 h-5 bg-white flex rounded-full items-center justify-center ri-add-line text-xs cursor-pointer quantity-increase"
                            data-index="<%= index %>"></i>
 
-                        <!-- Quantity -->
                         <div class="px-1.5 py-0.5 rounded bg-white text-black text-xs quantity-value"
                              id="quantity-<%= index %>">1</div>
 
-                        <!-- Subtract -->
                         <i class="w-5 h-5 bg-white flex rounded-full items-center justify-center ri-subtract-line text-xs cursor-pointer quantity-decrease"
                            data-index="<%= index %>"></i>
                     </div>
@@ -108,28 +113,23 @@
         });
     });
 
-    // Checkbox listeners
     checkboxes.forEach(cb => cb.addEventListener("change", updateGrandTotal));
 
-    // quantity & product totals
     function updateQuantity(index, change) {
         const quantityEl = document.getElementById("quantity-" + index);
         let quantity = parseInt(quantityEl.textContent);
-
-        if (quantity+change<1)return; 
+        if (quantity + change < 1) return;
 
         quantity += change;
         quantityEl.textContent = quantity;
 
-        // Unit price
         const productCheckbox = document.getElementById("product-" + index);
         const unitPrice = parseFloat(productCheckbox.dataset.price);
-        const netTotalEl = document.getElementById("nettotal-" + index);
-        netTotalEl.textContent = "₹ " + (unitPrice * quantity);
-        const totalEl = document.getElementById("total-" + index);
-        totalEl.textContent = "₹ " + (unitPrice * quantity);
+        document.getElementById("nettotal-" + index).textContent = "₹ " + (unitPrice * quantity);
+        document.getElementById("total-" + index).textContent = "₹ " + (unitPrice * quantity);
         updateGrandTotal();
-    }   //Update summary bar
+    }
+
     function updateGrandTotal() {
         let total = 0;
         checkboxes.forEach(box => {
@@ -144,6 +144,34 @@
         grandTotalEl.textContent = total;
         summaryBar.style.display = total > 0 ? "block" : "none";
     }
+
+    document.getElementById("buy-btn").addEventListener("click", () => {
+        let selected = [];
+        let total = 0;
+
+        document.querySelectorAll(".product-check:checked").forEach(cb => {
+            const index = cb.dataset.index;
+            const quantity = parseInt(document.getElementById("quantity-" + index).textContent);
+            const price = parseFloat(cb.dataset.price);
+
+            selected.push({ id: cb.value, qty: quantity });
+            total += price * quantity;
+        });
+
+        fetch("/checkout", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ products: selected, totalCost: total })
+        })
+        .then(res => {
+            if (res.redirected) {
+                window.location.href = res.url; // follow redirect to /myorders
+            }
+        })
+        .catch(err => console.error(err));
+
+
+    });
 </script>
 
 <%- include('./partials/footer') %>
