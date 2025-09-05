@@ -13,6 +13,13 @@
         </div>
     </div>
 
+    <% if(user.cart.length==0) { %>
+        <p <p class="text-3xl font-extrabold text-center text-blue-500 drop-shadow-md tracking-wide hover:text-blue-600 transition duration-300 ease-in-out transform hover:scale-105">
+            No items in cart
+        </p>
+
+    <% } %>
+
     <% user.cart.forEach((item, index) => { 
         let unitPrice = item.price - item.discount + 20; 
     %>

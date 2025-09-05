@@ -36,18 +36,6 @@ router.get("/addtocart/:id",isLoggedin,async (req,res)=>{
     res.redirect("/shop");
 });
 
-router.get("/cart",isLoggedin,async (req,res)=>{
-    let user=await userModel.findOne({email:req.user.email}).populate("cart");
-    res.render("cart",{user});
-});
-
-router.get("/account",isLoggedin,async (req,res)=>{
-    let user= await userModel.findOne({email:req.user.email});
-    let success= req.flash("success");
-    let error=req.flash("error");
-    res.render("myaccount",{user,success,error});
-});
-
 router.post("/changedetails",isLoggedin,async (req,res)=>{
     let user= await userModel.findOne({email:req.user.email});
     let{fullname,oldpass,newpass,contact,address,pincode}=req.body;
@@ -99,16 +87,15 @@ router.get("/removeproduct/:product_id",isLoggedin,async (req,res)=>{
     res.redirect("/cart");
 });
 
-router.get("/myorders", isLoggedin, async (req, res) => {
-    let user = await userModel.findOne({ email: req.user.email });
-    let orders = await orderModel.find({ user: user._id }).populate("products");
-    res.render("myorders", { user, orders });
-});
-
-
 router.post("/checkout",isLoggedin,async (req,res)=>{
     let user=await userModel.findOne({email:req.user.email});
     if(!user) return res.redirect("/");
+
+    if(!user.contact || !user.address || !user.pincode){
+        req.flash("error","Please provide the details to proceed");
+        return res.redirect("/users/account");
+    }
+
     let{products,totalCost}=req.body;
 
     let order=await orderModel.create({
@@ -120,7 +107,7 @@ router.post("/checkout",isLoggedin,async (req,res)=>{
     user.orders.push(order._id);
 
     await user.save();
-    res.redirect("/myorders");
+    res.redirect("/users/myorders");
 });
 
 module.exports=router;
