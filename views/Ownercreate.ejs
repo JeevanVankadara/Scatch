@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Owner</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white">
+  <%- include('./partials/ownerheader') %>
+
+  <!-- Flash Messages -->
+  <% if (error && error.length > 0) { %>
+    <div id="flash-message" class="fixed top-5 left-1/2 -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded shadow-lg text-sm z-50">
+      <%= error[0] %>
+    </div>
+  <% } %>
+
+  <% if (success && success.length > 0) { %>
+    <div id="flash-message" class="fixed top-5 left-1/2 -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded shadow-lg text-sm z-50">
+      <%= success[0] %>
+    </div>
+  <% } %>
+
+  <div class="w-full h-screen flex px-20">
+    <!-- Register Section -->
+    <div class="w-1/2 flex items-center justify-center h-screen">
+      <div class="w-full px-32">
+        <h3 class="text-4xl">Welcome to <span class="text-blue-400 font-semibold">Scatch</span></h3>
+        <h4 class="text-2xl mb-5">Create Owner Account</h4>
+        <form autocomplete="off" action="/owners/createowner" method="post">
+          <input class="bg-zinc-100 block w-full px-3 py-2 border rounded-md mb-3 border-zinc-200"
+                 type="text" placeholder="Full Name" name="fullname">
+          <input class="bg-zinc-100 block w-full px-3 py-2 border rounded-md mb-3 border-zinc-200"
+                 type="email" placeholder="Email" name="email">
+          <input class="bg-zinc-100 block w-full px-3 py-2 border rounded-md mb-3 border-zinc-200"
+                 type="password" placeholder="Password" name="password">
+          <input class="bg-zinc-100 block w-full px-3 py-2 border rounded-md mb-3 border-zinc-200"
+                 type="tel" placeholder="Contact Number" name="contact">
+          <input class="bg-zinc-100 block w-full px-3 py-2 border rounded-md mb-3 border-zinc-200"
+                 type="text" placeholder="GSTIN Number" name="gstin">
+          <input class="px-5 rounded-full py-3 mt-2 bg-blue-500 text-white cursor-pointer" type="submit"
+                 value="Create Owner Account">
+        </form>
+      </div>
+    </div>
+
+    <!-- Login Section -->
+    <div class="w-1/2 flex items-center justify-center h-screen">
+      <div class="w-full px-32">
+        <h4 class="text-2xl capitalize mb-5">Login as Owner</h4>
+        <form autocomplete="off" action="/owners/login" method="post">
+          <input class="block bg-zinc-100 w-full px-3 py-2 border rounded-md mb-3 border-zinc-200"
+                 type="email" placeholder="Email" name="email">
+          <input class="block bg-zinc-100 w-full px-3 py-2 border rounded-md mb-3 border-zinc-200"
+                 type="password" placeholder="Password" name="password">
+          <input class="px-5 block rounded-full py-3 mt-2 bg-blue-500 text-white cursor-pointer" type="submit"
+                 value="Login">
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <%- include('./partials/footer') %>
+
+  <script>
+    setTimeout(() => {
+      const flash = document.getElementById("flash-message");
+      if (flash) {
+        flash.style.transition = "opacity 0.5s ease";
+        flash.style.opacity = "0";
+        setTimeout(() => flash.remove(), 500); 
+      }
+    }, 3000);
+  </script>
+</body>
+</html>
