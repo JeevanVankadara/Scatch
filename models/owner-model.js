@@ -1,3 +1,4 @@
+const { ref } = require('joi');
 const mongoose=require('mongoose');
 
 const ownerschema=mongoose.Schema({
@@ -9,10 +10,10 @@ const ownerschema=mongoose.Schema({
     email : String,
     password: String,
     iadmin: Boolean,
-    products : {
-        type: Array,
-        default:[]
-    },
+    products : [{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"product",
+    }],
     contact : Number,
     picture : String,
     gstin:String

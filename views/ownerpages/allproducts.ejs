@@ -1,0 +1,70 @@
+<%- include('../partials/ownerheader') %>
+
+<% if (error && error.length > 0) { %>
+  <div id="flash-message" class="fixed top-5 left-1/2 -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded shadow-lg text-sm z-50">
+    <%= error[0] %>
+  </div>
+<% } %>
+
+<% if (success && success.length > 0) { %>
+  <div id="flash-message" class="fixed top-5 left-1/2 -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded shadow-lg text-sm z-50">
+    <%= success[0] %>
+  </div>
+<% } %>
+
+<div class="w-full min-h-screen flex flex-col px-20 py-10">
+  <h2 class="text-4xl mb-8 font-semibold">All Products</h2>
+
+  <!-- Product Grid -->
+  <div class="grid grid-cols-4 gap-8">
+    <% if (products && products.length > 0) { %>
+      <% products.forEach(function(product) { %>
+        <div class="flex flex-col h-72">
+
+          <div class="w-full h-44 flex items-center justify-center p-2" style="background-color: <%= product.bgcolor %>">
+            <% if (product.image && product.mimetype) { %>
+              <img class="max-h-36 w-auto object-contain" 
+                   src="data:<%= product.mimetype %>;base64,<%= product.image.toString('base64') %>" 
+                   alt="<%= product.name %>">
+            <% } else { %>
+              <p>No image available</p>
+            <% } %>
+          </div>
+
+          <div class="flex justify-between items-center px-4 py-3 mt-2" 
+               style="background-color: <%= product.panelcolor %>; color: <%= product.textcolor %>">
+            <div>
+              <h3 class="text-sm font-medium"><%= product.name %></h3>
+              <div class="flex items-center gap-2">
+                <h4 class="text-sm font-semibold">₹ <%= product.price %></h4>
+                <% if (product.discount && product.discount > 0) { %>
+                  <span class="px-2 py-0.5 rounded-full text-xs font-medium <%= product.bgcolor %> <%= product.textcolor %>">
+                    ₹<%= product.discount %> OFF
+                  </span>
+                <% } %>
+              </div>
+            </div>
+            <a class="w-7 h-7 flex items-center justify-center rounded-full bg-yellow-500 text-white hover:bg-yellow-600"
+               href="/owners/editproduct/<%= product._id %>">
+              <i class="ri-edit-line"></i>
+            </a>
+          </div>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <p class="text-zinc-500 text-lg">No products found.</p>
+    <% } %>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
+
+<script>
+  setTimeout(() => {
+    const flash = document.getElementById("flash-message");
+    if (flash) {
+      flash.style.transition = "opacity 0.5s ease";
+      flash.style.opacity = "0";
+      setTimeout(() => flash.remove(), 500); 
+    }
+  }, 3000);

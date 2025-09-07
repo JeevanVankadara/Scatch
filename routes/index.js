@@ -62,7 +62,7 @@ router.post("/changedetails",isLoggedin,async (req,res)=>{
                                     user.password = hash;
                                     await user.save();
                                     req.flash("success","updated successfully");
-                                    res.redirect("/account");
+                                    res.redirect("/users/account");
                                 }
                 });
                         
@@ -84,7 +84,7 @@ router.get("/removeproduct/:product_id",isLoggedin,async (req,res)=>{
         user.cart.splice(i,1);
     }
     await user.save();
-    res.redirect("/cart");
+    res.redirect("/users/cart");
 });
 
 router.post("/checkout",isLoggedin,async (req,res)=>{
@@ -95,7 +95,6 @@ router.post("/checkout",isLoggedin,async (req,res)=>{
         req.flash("error","Please provide the details to proceed");
         return res.redirect("/users/account");
     }
-
     let{products,totalCost}=req.body;
 
     let order=await orderModel.create({

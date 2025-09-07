@@ -2,8 +2,10 @@ const express=require('express');
 const router=express.Router();
 const productModel=require('../models/product-model');
 const upload=require('../config/multer-config');
+const isOwnerLoggedin=require('../middlewares/isOwnerLoggedin');
+const ownerModel=require('../models/owner-model');
 
-router.post("/create",upload.single("image"),async (req,res)=>{
+router.post("/create",upload.single("image"),isOwnerLoggedin,async (req,res)=>{
     try{
         let {image,name,price,discount ,bgcolor ,panelcolor,textcolor}=req.body;
         let mimetype=req.file.mimetype;
@@ -17,12 +19,16 @@ router.post("/create",upload.single("image"),async (req,res)=>{
         panelcolor,
         textcolor,
     });
+
+    let owner=await ownerModel.findOne({email:req.owner.email});
+    owner.products.push(product._id);
+    await owner.save();
     req.flash("success","Product created successfully");
-    res.redirect("/owners/admin");
+    res.redirect("/owners/addproduct");
     }
     catch(err){
         res.send(err.message);
     }
-})
+});
 
 module.exports=router;

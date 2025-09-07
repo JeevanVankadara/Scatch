@@ -43,7 +43,7 @@ router.get("/cart",isLoggedin,async (req,res)=>{
 
 router.get("/myorders", isLoggedin, async (req, res) => {
     let user = await userModel.findOne({ email: req.user.email });
-    let orders = await orderModel.find({ user: user._id }).populate("products");
+    let orders = (await orderModel.find({ user: user._id }).populate("products").sort({createdAt:-1})).reverse();
     res.render("myorders", { user, orders });
 });
 
