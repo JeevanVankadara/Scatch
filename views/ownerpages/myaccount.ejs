@@ -1,0 +1,103 @@
+<%- include ('../partials/ownerheader') %>
+
+<% if (success && success.length > 0) { %>
+  <div id="flash-message" class="fixed top-5 left-1/2 -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded shadow-lg text-sm z-50">
+    <%= success[0] %>
+  </div>
+<% } %>
+
+<% if (error && error.length > 0) { %>
+  <div id="flash-message" class="fixed top-5 left-1/2 -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded shadow-lg text-sm z-50">
+    <%= error[0] %>
+  </div>
+<% } %>
+
+<body class="font-['helvetica_now_display'] bg-gray-50">
+  <div class="w-full min-h-screen flex px-20 py-10 mt-10">
+
+    <!-- Sidebar -->
+    <div class="w-[25%] flex flex-col items-start pr-10">
+      <div class="flex flex-col mb-10">
+        <h3 class="text-lg font-semibold mb-3">Owner Account</h3>
+        <a class="block w-fit mb-2 hover:underline" href="/owners/index">Orders</a>
+        <a class="block w-fit mb-2 hover:underline" href="/owners/myaccount">My Account</a>
+        <a class="block w-fit mb-2 hover:underline" href="/owners/addproduct">Add product</a>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="w-[75%]">
+      <div class="max-w-lg w-full bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+        <h2 class="text-2xl font-semibold mb-6 text-gray-800">Update Your Details</h2>
+
+        <div class="mb-6 text-sm text-gray-600 space-y-1">
+          <p><strong>Name:</strong> <%= owner.fullname %></p>
+          <p><strong>Email:</strong> <%= owner.email %></p>
+          <p><strong>Contact:</strong> <%= owner.contact %></p>
+          <p><strong>GSTIN:</strong> <%= owner.gstin %></p>
+        </div>
+
+        <form action="/owners/changedetails" method="post" class="flex flex-col gap-4" id="ownerForm">
+          <input type="text" value="<%= owner.fullname %>" name="fullname"
+                 class="border px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300">
+          <input type="email" value="<%= owner.email %>" name="email" readonly
+                 class="border px-3 py-2 rounded-md bg-gray-100 text-gray-500">
+          
+          <!-- Password fields -->
+          <input type="password" placeholder="Enter old password" name="oldpass" id="oldpass"
+                 class="border px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300">
+          <input type="password" placeholder="Enter new password" name="newpass" id="newpass"
+                 class="border px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300">
+          <input type="password" placeholder="Re-enter new password" name="confnewpass" id="confnewpass"
+                 class="border px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300">
+
+          <!-- Contact & GSTIN -->
+          <input type="tel" value="<%= owner.contact %>" name="contact" id="contact"
+                 class="border px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300">
+          <input type="text" value="<%= owner.gstin %>" name="gstin" id="gstin"
+                 class="border px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300">
+
+          <input type="submit" value="Update"
+                 class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 cursor-pointer transition">
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('ownerForm').addEventListener('submit', function(event) {
+      const oldpass = document.getElementById('oldpass').value;
+      const newpass = document.getElementById('newpass').value;
+      const confnewpass = document.getElementById('confnewpass').value;
+
+      if (!oldpass) {
+        alert("Enter your old password to update details");
+        event.preventDefault();
+        return;
+      }
+
+      if (newpass && newpass.length < 6) {
+        alert("New password must be at least 6 characters long");
+        event.preventDefault();
+        return;
+      }
+
+      if (newpass !== confnewpass) {
+        alert("New passwords do not match");
+        event.preventDefault();
+      }
+    });
+
+    const contact = document.getElementById('contact');
+    if (!contact.value) {
+      contact.setAttribute('placeholder',"Enter your contact number");
+    }
+
+    const gstin = document.getElementById('gstin');
+    if (!gstin.value) {
+      gstin.setAttribute('placeholder',"Enter your GSTIN");
+    }
+  </script>
+</body>
+
+<%- include('../partials/footer') %>
