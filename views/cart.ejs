@@ -1,36 +1,35 @@
 <%- include('./partials/header') %>
 
-<div class="w-full min-h-screen flex flex-col px-10 py-10 gap-8">
+<div class="w-full min-h-screen flex flex-col px-6 sm:px-10 py-12 gap-10 bg-gradient-to-br from-gray-50 to-gray-100">
 
     <!-- Top Summary Bar -->
-    <div id="summary-bar" class="sticky top-0 bg-white shadow-md p-3 rounded-md hidden">
+    <div id="summary-bar" class="sticky top-0 bg-white shadow-lg p-4 rounded-xl hidden">
         <div class="flex justify-between items-center">
-            <h2 class="text-lg">Total Selected: ₹ <span id="grand-total">0</span></h2>
+            <h2 class="text-lg sm:text-xl font-semibold text-gray-700">Total Selected: ₹ <span id="grand-total">0</span></h2>
             <button id="buy-btn" 
-                class="px-4 py-1.5 bg-yellow-500 font-medium rounded-md hover:bg-yellow-600 text-sm">
+                class="px-4 py-2 bg-yellow-500 font-medium rounded-lg hover:bg-yellow-600 text-sm text-white transition-colors duration-200">
                 Proceed to Buy
             </button>
         </div>
     </div>
 
-    <% if(user.cart.length==0) { %>
-        <p <p class="text-3xl font-extrabold text-center text-blue-500 drop-shadow-md tracking-wide hover:text-blue-600 transition duration-300 ease-in-out transform hover:scale-105">
+    <% if(user.cart.length === 0) { %>
+        <p class="text-3xl font-extrabold text-center text-blue-600 drop-shadow-md tracking-wide hover:text-blue-700 transition duration-300 ease-in-out transform hover:scale-105">
             No items in cart
         </p>
-
     <% } %>
 
     <% user.cart.forEach((item, index) => { 
-        let unitPrice = item.price - item.discount + 20; 
+        let unitPrice = item.price - item.discount + 20 + 25; // Added shipping fee (₹25)
     %>
-        <div class="w-full flex gap-6 mb-6 border-b pb-6">
+        <div class="w-full flex flex-col sm:flex-row gap-6 mb-6 border-b pb-6">
 
             <!-- Left Product Card -->
-            <div class="w-[25%] rounded-md overflow-hidden relative">
+            <div class="w-full sm:w-[25%] rounded-xl overflow-hidden relative shadow-lg bg-white">
                 <input type="checkbox" 
                        name="selectedProducts[]" 
                        value="<%= item._id %>" 
-                       class="absolute top-2 left-2 w-4 h-4 product-check"
+                       class="absolute top-3 left-3 w-5 h-5 product-check accent-blue-600"
                        data-price="<%= unitPrice %>"
                        data-index="<%= index %>"
                        id="product-<%= index %>">
@@ -39,55 +38,55 @@
                     <img class="h-36 object-contain"
                         src="data:<%= item.mimetype %>;base64,<%= item.image.toString('base64') %>"
                         alt="<%= item.name %>">
-                    <a href="/removeproduct/<%= item._id %>" class="absolute top-2 right-2">
+                    <a href="/removeproduct/<%= item._id %>" class="absolute top-3 right-3">
                         <img class="h-6 w-6 object-contain" src="/images/bin.png" alt="bin image">
                     </a>
                 </div>
 
-                <div class="w-full flex justify-between px-3 py-2 bg-[<%= item.panelcolor %>]">
-                    <h3 class="text-lg font-medium"><%= item.name %></h3>
-                    <div class="flex items-center gap-1">
-                        <i class="w-5 h-5 bg-white flex rounded-full items-center justify-center ri-add-line text-xs cursor-pointer quantity-increase"
+                <div class="w-full flex justify-between px-4 py-3 bg-[<%= item.panelcolor %>]">
+                    <h3 class="text-lg font-semibold text-gray-800"><%= item.name %></h3>
+                    <div class="flex items-center gap-2">
+                        <i class="w-6 h-6 bg-white flex rounded-full items-center justify-center ri-add-line text-sm cursor-pointer quantity-increase hover:bg-gray-100"
                            data-index="<%= index %>"></i>
 
-                        <div class="px-1.5 py-0.5 rounded bg-white text-black text-xs quantity-value"
+                        <div class="px-2 py-1 rounded bg-white text-black text-sm font-medium quantity-value"
                              id="quantity-<%= index %>">1</div>
 
-                        <i class="w-5 h-5 bg-white flex rounded-full items-center justify-center ri-subtract-line text-xs cursor-pointer quantity-decrease"
+                        <i class="w-6 h-6 bg-white flex rounded-full items-center justify-center ri-subtract-line text-sm cursor-pointer quantity-decrease hover:bg-gray-100"
                            data-index="<%= index %>"></i>
                     </div>
                 </div>
 
-                <div class="flex items-center text-white justify-between px-3 py-2 bg-[<%= item.textcolor %>]">
-                    <h4 class="text-sm">Net Total</h4>
-                    <h2 class="text-sm product-nettotal" id="nettotal-<%= index %>">₹ <%= unitPrice %></h2>
+                <div class="flex items-center text-white justify-between px-4 py-3 bg-[<%= item.textcolor %>]">
+                    <h4 class="text-sm font-medium">Net Total</h4>
+                    <h2 class="text-sm font-semibold product-nettotal" id="nettotal-<%= index %>">₹ <%= unitPrice %></h2>
                 </div>
             </div>
 
             <!-- Right Price Breakdown -->
-            <div class="w-[75%]">
-                <h3 class="text-lg font-medium">Price Breakdown</h3>
-                <div class="px-6 mt-3 text-sm">
-                    <div class="flex mt-1">
-                        <h4 class="w-1/3">Total MRP</h4>
+            <div class="w-full sm:w-[75%] bg-white p-6 rounded-xl shadow-lg">
+                <h3 class="text-lg sm:text-xl font-semibold text-gray-800">Price Breakdown</h3>
+                <div class="px-4 sm:px-6 mt-3 text-sm text-gray-600">
+                    <div class="flex mt-2">
+                        <h4 class="w-1/3 font-medium">Total MRP</h4>
                         <h4>₹ <%= item.price %></h4>
                     </div>
-                    <div class="flex mt-1">
-                        <h4 class="w-1/3">Discount on MRP</h4>
+                    <div class="flex mt-2">
+                        <h4 class="w-1/3 font-medium">Discount on MRP</h4>
                         <h4>₹ <%= Number(item.discount) %></h4>
                     </div>
-                    <div class="flex mt-1">
-                        <h4 class="w-1/3">Platform Fee</h4>
+                    <div class="flex mt-2">
+                        <h4 class="w-1/3 font-medium">Platform Fee</h4>
                         <h4>₹ 20</h4>
                     </div>
-                    <div class="flex mt-1">
-                        <h4 class="w-1/3">Shipping Fee</h4>
-                        <h4>FREE</h4>
+                    <div class="flex mt-2">
+                        <h4 class="w-1/3 font-medium">Shipping Fee</h4>
+                        <h4>₹ 25</h4>
                     </div>
                 </div>
-                <div class="w-full h-[1px] bg-gray-400 mt-6"></div>
-                <div class="flex mt-3">
-                    <h3 class="w-1/3 text-base">Total Amount</h3>
+                <div class="w-full h-[1px] bg-gray-300 mt-6"></div>
+                <div class="flex mt-4">
+                    <h3 class="w-1/3 text-base font-semibold text-gray-800">Total Amount</h3>
                     <h3 class="font-semibold text-base text-green-600 product-total" id="total-<%= index %>">
                         ₹ <%= unitPrice %>
                     </h3>
@@ -132,8 +131,8 @@
 
         const productCheckbox = document.getElementById("product-" + index);
         const unitPrice = parseFloat(productCheckbox.dataset.price);
-        document.getElementById("nettotal-" + index).textContent = "₹ " + (unitPrice * quantity);
-        document.getElementById("total-" + index).textContent = "₹ " + (unitPrice * quantity);
+        document.getElementById("nettotal-" + index).textContent = "₹ " + (unitPrice * quantity).toFixed(2);
+        document.getElementById("total-" + index).textContent = "₹ " + (unitPrice * quantity).toFixed(2);
         updateGrandTotal();
     }
 
@@ -148,7 +147,7 @@
             }
         });
 
-        grandTotalEl.textContent = total;
+        grandTotalEl.textContent = total.toFixed(2);
         summaryBar.style.display = total > 0 ? "block" : "none";
     }
 
@@ -172,12 +171,10 @@
         })
         .then(res => {
             if (res.redirected) {
-                window.location.href = res.url; // follow redirect to /myorders
+                window.location.href = res.url; 
             }
         })
         .catch(err => console.error(err));
-
-
     });
 </script>
 

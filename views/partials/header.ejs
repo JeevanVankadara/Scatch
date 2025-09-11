@@ -20,5 +20,7 @@
                 <a href="/users/account">My account</a>
                 <a class="text-red-600" href="/users/logout">Logout</a>
             </div>
+        <%} else { %>
+            <a class="text-red-400 font-bold hover:text-red-500 hover:underline transition-all duration-300" href="/owners/create">Owner Login</a>
         <% } %>
     </nav>

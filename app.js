@@ -14,6 +14,7 @@ const productRouter=require('./routes/productRouter');
 const userRouter=require('./routes/userRouter');
 const indexRouter=require('./routes/index');
 const orderRouter=require('./routes/orders');
+const adminRouter=require('./routes/adminRouter');
 
 
 const cookieParser=require('cookie-parser');
@@ -42,5 +43,7 @@ app.use("/users",userRouter);
 app.use("/products",productRouter);
 
 app.use("/orders",orderRouter);
+
+app.use("/admin",adminRouter);
 
 app.listen(3000);
