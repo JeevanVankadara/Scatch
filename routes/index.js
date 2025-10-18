@@ -48,7 +48,7 @@ router.post("/changedetails",isLoggedin,async (req,res)=>{
                         user.pincode=pincode;
                         await user.save();
                         req.flash("success","updated successfully");
-                        res.redirect("/account");
+                        res.redirect("/users/account");
                     }
                     else{
                         user.fullname = fullname;
@@ -71,7 +71,7 @@ router.post("/changedetails",isLoggedin,async (req,res)=>{
         }
             else {
             req.flash("error","Old password mismatched");
-            res.redirect("/account");
+            res.redirect("/users/account");
         }
     });
 });
